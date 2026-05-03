@@ -1,0 +1,86 @@
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #f9fafb;
+}
+
+.head{
+  margin-bottom: 12px;
+  padding: 1rem,auto;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.container {
+  width: 320px;
+  padding: 16px;
+  position: relative;
+}
+
+.card {
+  padding: 1.2rem;
+}
+
+.button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.button.secondary {
+  background: white;
+  color: #111;
+}
+
+.button:disabled {
+  opacity: 0.6;
+}
+
+.text-muted {
+  font-size: 13px;
+  color: #6b7280;
+  margin-left: 5px;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cont_loader{
+  background-color: rgba(250, 234, 234, 0.4);
+  width: fit-content;
+  border-radius: 50px;
+  padding: 1.5rem;
+  box-shadow: 5px 5px 4px rgba(0,0,0,0.05);
+  margin-left: 30%;
+}
+
+.loader {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #2563eb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px;
+}
+
+ul {
+  list-style-type: disc;
+  color: #2563eb;
+}
+
+li {
+  line-height: 1.4;
+  color: #000;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
