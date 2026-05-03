@@ -17,6 +17,10 @@ export default function ResultView({ summary, onReset, readingTime }: Props) {
   }
 };
 
+  const safeSummary = summary.map(line =>
+    line.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+  );
+
   return (
      <div className="card result" style={{ maxHeight: 300, overflowY: "auto" }}>
         <p className="text-muted"><span style={{marginLeft: "-10px", color: "#2563eb"}}><LuNotebookPen /></span>Summary</p>
@@ -26,7 +30,7 @@ export default function ResultView({ summary, onReset, readingTime }: Props) {
         </p>
 
         <ul style={{ paddingLeft: 16, margin: 0 }}>
-            {summary.map((point, index) => (
+            {safeSummary.map((point, index) => (
                 <li key={index} style={{ marginBottom: 6, fontSize: "0.8rem" }}>
                     {point}
                 </li>
