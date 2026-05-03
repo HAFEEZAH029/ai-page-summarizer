@@ -1,73 +1,96 @@
-# React + TypeScript + Vite
+# AI Page Summarizer Chrome Extension
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚀 Overview
 
-Currently, two official plugins are available:
+AI Page Summarizer is a Chrome Extension that extracts meaningful content from any webpage and generates a concise, structured summary using AI.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+It helps users quickly understand long articles without reading everything.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨ Features
 
-## Expanding the ESLint configuration
+* Extracts readable content from web pages
+* Generates bullet-point summaries using AI
+* Displays key insights in a clean popup UI
+* Caches summaries to avoid repeated API calls
+* Handles errors and loading states gracefully
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🧱 Architecture
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+The extension follows a modular Chrome Extension (Manifest V3) architecture:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Popup (React UI)
+→ sends message to Background Service Worker
+→ Background injects Content Script
+→ Content Script extracts page content
+→ Background sends content to AI (Gemini)
+→ Summary is returned to Popup
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🤖 AI Integration
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+* Uses Google Gemini API for summarization
+* API calls are handled in the **background service worker**
+* Ensures API keys are not exposed in the UI layer
+
+---
+
+## 🔐 Security Considerations
+
+* API keys are not stored in the frontend or content script
+* Requests are handled in the background script
+* Minimal permissions are used (`activeTab`, `storage`, `scripting`)
+
+> Note: In production, API calls would be routed through a secure backend proxy for full protection of API keys.
+
+---
+
+## 💾 Caching Strategy
+
+* Uses `chrome.storage.local`
+* Stores summaries per URL
+* Prevents duplicate API calls
+* Improves performance and responsiveness
+
+---
+
+## ⚖️ Trade-offs
+
+* Used background-based API calls instead of a backend to reduce complexity within the time constraint
+* Limited content extraction heuristics (can be improved with readability libraries)
+
+---
+
+## 🔧 Setup Instructions
+
+1. Clone the repository
+2. Install dependencies
+
+   ```
+   npm install
+   ```
+3. Create a `.env` file:
+
+   ```
+   VITE_GEMINI_API_KEY=your_api_key_here
+   ```
+4. Build the project
+
+   ```
+   npm run build
+   ```
+5. Open Chrome → `chrome://extensions/`
+6. Enable Developer Mode
+7. Click **Load Unpacked** → select the `dist` folder
+---
+
+## 🚀 Future Improvements
+
+* Highlight key sections on the page
+* Improve content extraction using readability algorithms
+* Add user settings (summary length, tone)
+* Backend proxy for enhanced security
