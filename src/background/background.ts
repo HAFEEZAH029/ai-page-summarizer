@@ -7,10 +7,16 @@ type CachedSummary = {
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   console.log("📩 Received message:", message);
 
-  if (message.type === "SUMMARIZE_PAGE") {
-    handleSummarize(sendResponse);
-    return true;
-  }
+  if (!message || typeof message.type !== "string") {
+  return;
+ }
+
+ if (message.type !== "SUMMARIZE_PAGE") {
+  return;
+ }
+
+handleSummarize(sendResponse);
+return true;
 });
 
 function calculateReadingTime(text: string): string {
