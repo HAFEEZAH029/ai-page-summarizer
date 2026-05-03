@@ -1,3 +1,9 @@
+
+type CachedSummary = {
+  summary: string[];
+  readingTime: string;
+};
+
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   console.log("📩 Received message:", message);
 
@@ -7,6 +13,12 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   }
 });
 
+function calculateReadingTime(text: string): string {
+  const words = text.trim().split(/\s+/).length;
+  const minutes = Math.ceil(words / 200);
+
+  return `${minutes} min read`;
+}
 
 async function generateSummary(text: string): Promise<string[]> {
   const trimmed = text.slice(0, 3000);
@@ -65,12 +77,18 @@ async function handleSummarize(sendResponse: any) {
 
     const cacheKey = `summary_${tab.url}`;
 
-    const cached = await chrome.storage.local.get(cacheKey);
+    const cached = await chrome.storage.local.get(cacheKey) as {
+      [key: string]: CachedSummary;
+    };
 
     if (cached[cacheKey]) {
-      sendResponse({ summary: cached[cacheKey] });
-      return;
-    }
+      sendResponse({
+        summary: cached[cacheKey].summary,
+        readingTime: cached[cacheKey].readingTime
+      });
+
+  return;
+}
 
     try {
       await chrome.scripting.executeScript({
@@ -94,6 +112,7 @@ async function handleSummarize(sendResponse: any) {
     }
 
     const pageText = response?.content;
+    const readingTime = calculateReadingTime(pageText);
 
     if (!pageText) {
       sendResponse({ error: "No readable content found" });
@@ -108,10 +127,13 @@ async function handleSummarize(sendResponse: any) {
     }
 
     await chrome.storage.local.set({
-      [cacheKey]: summary
+      [cacheKey]: {
+        summary,
+        readingTime
+      }
     });
 
-    sendResponse({ summary });
+    sendResponse({ summary, readingTime });
 
   } catch (error) {
     console.error("❌ Unexpected error:", error);

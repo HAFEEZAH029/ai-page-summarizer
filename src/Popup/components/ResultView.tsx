@@ -3,9 +3,10 @@ import { LuNotebookPen } from "react-icons/lu";
 type Props = {
   summary: string[];
   onReset: () => void;
+  readingTime: string;
 };
 
-export default function ResultView({ summary, onReset }: Props) {
+export default function ResultView({ summary, onReset, readingTime }: Props) {
 
   const handleCopy = async () => {
   try {
@@ -17,8 +18,12 @@ export default function ResultView({ summary, onReset }: Props) {
 };
 
   return (
-    <div className="card result" style={{ maxHeight: 300, overflowY: "auto" }}>
-      <p className="text-muted"><span style={{marginLeft: "-10px", color: "#2563eb"}}><LuNotebookPen /></span>Summary</p>
+     <div className="card result" style={{ maxHeight: 300, overflowY: "auto" }}>
+        <p className="text-muted"><span style={{marginLeft: "-10px", color: "#2563eb"}}><LuNotebookPen /></span>Summary</p>
+
+        <p className="text-muted" style={{ marginBottom: "8px" }}>
+          ⏱ {readingTime}
+        </p>
 
         <ul style={{ paddingLeft: 16, margin: 0 }}>
             {summary.map((point, index) => (
