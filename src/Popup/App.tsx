@@ -10,7 +10,7 @@ type Status = "idle" | "loading" | "success" | "error";
 
 function App() {
   const [status, setStatus] = useState<Status>("idle");
-  const [summary, setSummary] = useState([]);
+  const [summary, setSummary] = useState<string[]>([]);
   const [title, setTitle] = useState("");
 
   useEffect(() => {
