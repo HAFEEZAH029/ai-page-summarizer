@@ -40,8 +40,6 @@ async function generateSummary(text: string): Promise<string[]> {
 
   const data = await response.json();
 
-  console.log("🧠 GEMINI RAW:", data);
-
   const output =
     data.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
@@ -54,14 +52,11 @@ async function generateSummary(text: string): Promise<string[]> {
 
 async function handleSummarize(sendResponse: any) {
   try {
-    console.log("🚀 Starting summarize flow");
 
     const [tab] = await chrome.tabs.query({
       active: true,
       currentWindow: true
     });
-
-    console.log("🧭 Active tab:", tab);
 
     if (!tab?.id || !tab?.url) {
       sendResponse({ error: "No active tab found" });
@@ -73,7 +68,6 @@ async function handleSummarize(sendResponse: any) {
     const cached = await chrome.storage.local.get(cacheKey);
 
     if (cached[cacheKey]) {
-      console.log("⚡ Using cached summary");
       sendResponse({ summary: cached[cacheKey] });
       return;
     }
@@ -99,16 +93,12 @@ async function handleSummarize(sendResponse: any) {
       return;
     }
 
-    console.log("📄 Content received:", response);
-
     const pageText = response?.content;
 
     if (!pageText) {
       sendResponse({ error: "No readable content found" });
       return;
     }
-
-    console.log("📄 Extracted text preview:", pageText.slice(0, 200));
 
     const summary = await generateSummary(pageText);
 
