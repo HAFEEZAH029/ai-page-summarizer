@@ -12,6 +12,7 @@ function App() {
   const [status, setStatus] = useState<Status>("idle");
   const [summary, setSummary] = useState<string[]>([]);
   const [title, setTitle] = useState("");
+  const [readingTime, setReadingTime] = useState("");
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -29,6 +30,7 @@ function App() {
       }
 
       setSummary(response.summary);
+      setReadingTime(response.readingTime);
       setStatus("success");
     });
   };
@@ -46,7 +48,7 @@ function App() {
       {status === "error" && <ErrorView onRetry={handleSummarize} />}
 
       {status === "success" && (
-        <ResultView summary={summary} onReset={() => setStatus("idle")} />
+        <ResultView summary={summary} onReset={() => setStatus("idle")} readingTime={readingTime} />
       )}
     </div>
   );
